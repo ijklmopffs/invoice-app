@@ -6,10 +6,30 @@ import moonIcon from "@/images/icon-moon.svg";
 import avatar from "@/images/image-avatar.jpg";
 import { useProvider } from "@/context/provider";
 import Navigation from "@/components/Navigation";
+import InvoiceComponent from "@/components/InvoiceComponent";
+import arrowRight from "@/images/icon-arrow-right.svg";
 
 export default function Home() {
   const { invoiceDetails } = useProvider();
   console.log(invoiceDetails);
+
+  // let invoices;
+
+  const invoices = invoiceDetails.map((invoice) => (
+    <InvoiceComponent
+      id={invoice.id}
+      key={invoice.id}
+      createdAt={invoice.createdAt}
+      paymentDue={invoice.paymentDue}
+      description={invoice.description}
+      paymentTerms={invoice.paymentTerms}
+      clientName={invoice.clientName}
+      clientEmail={invoice.clientEmail}
+      status={invoice.status}
+      total={invoice.total}
+      arrowRight={arrowRight}
+    />
+  ));
 
   return (
     <main className="flex gap-[30rem]">
@@ -27,6 +47,7 @@ export default function Home() {
 
       <div>
         <Navigation />
+        {invoices}
       </div>
     </main>
   );

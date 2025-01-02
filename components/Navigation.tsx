@@ -7,7 +7,7 @@ export default function Navigation() {
   const { invoiceDetails } = useProvider();
 
   return (
-    <main className="w-[65rem] my-16 flex items-center justify-between">
+    <main className="w-[65rem] my-8 flex items-center justify-between">
       <div>
         <h1 className="font-bold text-4xl text-darkBeige">Invoices</h1>
         <p className="font-medium text-xs text-strongPurple">

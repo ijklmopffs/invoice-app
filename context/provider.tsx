@@ -1,16 +1,11 @@
 "use client";
 
-import {
-  createContext,
-  useState,
-  useContext,
-  // useEffect,
-  ReactNode,
-} from "react";
+import { createContext, useState, useContext } from "react";
 import data from "@/data/data.json";
 
 type AppContextType = {
   invoiceDetails: InvoiceArray[];
+  getViewById: (id: string) => InvoiceArray | undefined;
 };
 
 export interface Address {
@@ -47,8 +42,12 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider = ({ children }: any) => {
   const [invoiceDetails, setInvoiceDetails] = useState<InvoiceArray[]>(data);
 
+  const getViewById = (id: string): InvoiceArray | undefined => {
+    return invoiceDetails.find((invoice) => invoice.id === id);
+  };
+
   return (
-    <AppContext.Provider value={{ invoiceDetails }}>
+    <AppContext.Provider value={{ invoiceDetails, getViewById }}>
       {children}
     </AppContext.Provider>
   );
