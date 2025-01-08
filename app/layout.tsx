@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { League_Spartan } from "next/font/google";
+import { Jost } from "next/font/google";
 import { AppProvider } from "@/context/provider";
 import "./globals.css";
 
-const spartan = League_Spartan({ subsets: ["latin"] });
+const jost = Jost({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Invoice App",
@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <AppProvider>
       <html lang="en">
-        <body className={`${spartan.className} antialiased bg-lightBg`}>
+        <body className={`${jost.className} antialiased bg-lightBg`}>
           {children}
         </body>
       </html>
