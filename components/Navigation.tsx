@@ -11,7 +11,7 @@ export default function Navigation() {
       <div>
         <h1 className="font-bold text-4xl text-darkBeige">Invoices</h1>
         <p className="font-medium text-xs text-strongPurple">
-          There are {invoiceDetails.length} total invoices
+          There are {invoiceDetails?.length} total invoices
         </p>
       </div>
 

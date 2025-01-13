@@ -15,7 +15,7 @@ export default function Home() {
 
   // let invoices;
 
-  const invoices = invoiceDetails.map((invoice) => (
+  const invoices = invoiceDetails?.map((invoice) => (
     <InvoiceComponent
       id={invoice.id}
       key={invoice.id}

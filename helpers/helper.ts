@@ -14,11 +14,10 @@ const capitalizeFirstLetter = (str: string): string => {
 };
 
 function formatMoney(amount: number): string {
-  const [whole, decimal] = amount.toString().split(".");
-
-  const formattedWhole = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-  return decimal ? `${formattedWhole}.${decimal}` : formattedWhole;
+  return amount?.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 export { formatDate, capitalizeFirstLetter, formatMoney };

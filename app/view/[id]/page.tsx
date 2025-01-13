@@ -25,6 +25,7 @@ export default function ViewInvoice() {
   const invoice = getViewById(id);
   console.log(invoice);
   if (!id) return <p>Loading...</p>;
+  if (invoice === undefined) return <p>Loading...</p>;
 
   const handleBack = () => {
     router.back();

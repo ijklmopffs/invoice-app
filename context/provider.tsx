@@ -1,10 +1,12 @@
 "use client";
 
-import { createContext, useState, useContext } from "react";
-import data from "@/data/data.json";
+import { createContext, useState, useContext, useEffect } from "react";
+// import data from "@/data/data.json";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/helpers/firebase";
 
 type AppContextType = {
-  invoiceDetails: InvoiceArray[];
+  invoiceDetails: InvoiceArray[] | undefined;
   getViewById: (id: string) => InvoiceArray | undefined;
 };
 
@@ -40,11 +42,24 @@ export interface InvoiceArray {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: any) => {
-  const [invoiceDetails, setInvoiceDetails] = useState<InvoiceArray[]>(data);
+  const [invoiceDetails, setInvoiceDetails] = useState<InvoiceArray[]>();
 
   const getViewById = (id: string): InvoiceArray | undefined => {
-    return invoiceDetails.find((invoice) => invoice.id === id);
+    return invoiceDetails?.find((invoice) => invoice.id === id);
   };
+
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      const querySnapshot = await getDocs(collection(db, "invoices"));
+      const invoiceData: InvoiceArray[] = querySnapshot.docs.map((doc) => ({
+        // id: doc.id,
+        ...(doc.data() as InvoiceArray),
+      }));
+      setInvoiceDetails(invoiceData);
+    };
+
+    fetchInvoices();
+  }, []);
 
   return (
     <AppContext.Provider value={{ invoiceDetails, getViewById }}>
