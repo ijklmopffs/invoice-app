@@ -8,12 +8,11 @@ import { useProvider } from "@/context/provider";
 import Navigation from "@/components/Navigation";
 import InvoiceComponent from "@/components/InvoiceComponent";
 import arrowRight from "@/images/icon-arrow-right.svg";
+import InvoiceForm from "@/components/InvoiceForm";
 
 export default function Home() {
-  const { invoiceDetails } = useProvider();
-  console.log(invoiceDetails);
-
-  // let invoices;
+  const { invoiceDetails, showForm } = useProvider();
+  // console.log(invoiceDetails);
 
   const invoices = invoiceDetails?.map((invoice) => (
     <InvoiceComponent
@@ -45,10 +44,11 @@ export default function Home() {
         </div>
       </div>
 
-      <div>
+      <div className={showForm ? "relative -z-10" : undefined}>
         <Navigation />
         {invoices}
       </div>
+      {showForm && <InvoiceForm />}
     </main>
   );
 }

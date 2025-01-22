@@ -4,7 +4,7 @@ import arrowIcon from "@/images/icon-arrow-down.svg";
 import plusIcon from "@/images/icon-plus.svg";
 
 export default function Navigation() {
-  const { invoiceDetails } = useProvider();
+  const { invoiceDetails, handleShowForm } = useProvider();
 
   return (
     <main className="w-[65rem] my-8 flex items-center justify-between">
@@ -21,7 +21,10 @@ export default function Navigation() {
           <Image src={arrowIcon} alt="" />
         </div>
         <div>
-          <button className="p-2 bg-purple flex items-center gap-2 font-bold text-sm text-white rounded-full">
+          <button
+            onClick={handleShowForm}
+            className="p-2 bg-purple flex items-center gap-2 font-bold text-sm text-white rounded-full"
+          >
             <div className="bg-white rounded-full p-2">
               <Image src={plusIcon} alt="" />
             </div>
