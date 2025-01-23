@@ -26,47 +26,61 @@ export default function InvoiceForm() {
             <div className="mt-5">
               <h2 className="text-purple text-sm font-bold">Bill From</h2>
               <div className="mt-5">
-                <p className="text-purple text-xs font-medium">
+                <label className="text-purple text-xs font-medium">
                   Street Address
-                </p>
+                </label>
                 <input
                   type="text"
                   className="w-[90%] mt-2 p-1 rounded border-2 border-gray focus:outline-none"
                   name="street"
                   value={formData.senderAddress.street}
                   onChange={(e) => handleAddressChange(e, "sender")}
+                  placeholder=""
+                  title="Enter your street address"
                 />
               </div>
 
               <div className="mt-4 flex justify-between">
                 <div>
-                  <p className="text-purple text-xs font-medium">City</p>
+                  <label className="text-purple text-xs font-medium">
+                    City
+                  </label>
                   <input
                     type="text"
                     className="w-[90%] mt-2 p-1 rounded border-2 border-gray focus:outline-none"
                     name="city"
                     value={formData.senderAddress.city}
                     onChange={(e) => handleAddressChange(e, "sender")}
+                    placeholder=""
+                    title="Enter your city"
                   />
                 </div>
                 <div>
-                  <p className="text-purple text-xs font-medium">Post Code</p>
+                  <label className="text-purple text-xs font-medium">
+                    Post Code
+                  </label>
                   <input
                     type="text"
                     className="w-[90%] mt-2 p-1 rounded border-2 border-gray focus:outline-none"
                     name="postCode"
                     value={formData.senderAddress.postCode}
                     onChange={(e) => handleAddressChange(e, "sender")}
+                    placeholder=""
+                    title="Enter your post code"
                   />
                 </div>
                 <div>
-                  <p className="text-purple text-xs font-medium">Country</p>
+                  <label className="text-purple text-xs font-medium">
+                    Country
+                  </label>
                   <input
                     type="text"
                     className="w-[90%] mt-2 p-1 rounded border-2 border-gray focus:outline-none"
                     name="country"
                     value={formData.senderAddress.country}
                     onChange={(e) => handleAddressChange(e, "sender")}
+                    placeholder=""
+                    title="Enter your country"
                   />
                 </div>
               </div>
@@ -75,71 +89,89 @@ export default function InvoiceForm() {
             <div className="mt-6">
               <h2 className="text-purple text-sm font-bold">Bill To</h2>
               <div className="mt-5">
-                <p className="text-purple text-xs font-medium">
+                <label className="text-purple text-xs font-medium">
                   Client&apos;s Name
-                </p>
+                </label>
                 <input
                   type="text"
                   className="w-[90%] mt-2 p-1 rounded border-2 border-gray focus:outline-none"
                   name="clientName"
                   value={formData.clientName}
                   onChange={handleInputChange}
+                  placeholder=""
+                  title="Enter your client's name"
                 />
               </div>
               <div className="mt-5">
-                <p className="text-purple text-xs font-medium">
+                <label className="text-purple text-xs font-medium">
                   Client&apos;s Email
-                </p>
+                </label>
                 <input
                   type="text"
                   className="w-[90%] mt-2 p-1 rounded border-2 border-gray focus:outline-none"
                   name="clientEmail"
                   value={formData.clientEmail}
                   onChange={handleInputChange}
+                  placeholder=""
+                  title="Enter your client's email"
                 />
               </div>
               <div className="mt-5">
-                <p className="text-purple text-xs font-medium">
+                <label className="text-purple text-xs font-medium">
                   Street Address
-                </p>
+                </label>
                 <input
                   type="text"
                   className="w-[90%] mt-2 p-1 rounded border-2 border-gray focus:outline-none"
                   name="street"
                   value={formData.clientAddress.street}
                   onChange={(e) => handleAddressChange(e, "client")}
+                  placeholder=""
+                  title="Enter your client's street address"
                 />
               </div>
 
               <div className="mt-4 flex justify-between">
                 <div>
-                  <p className="text-purple text-xs font-medium">City</p>
+                  <label className="text-purple text-xs font-medium">
+                    City
+                  </label>
                   <input
                     type="text"
                     className="w-[90%] mt-2 p-1 rounded border-2 border-gray focus:outline-none"
                     name="city"
                     value={formData.clientAddress.city}
                     onChange={(e) => handleAddressChange(e, "client")}
+                    placeholder=""
+                    title="Enter your client's city"
                   />
                 </div>
                 <div>
-                  <p className="text-purple text-xs font-medium">Post Code</p>
+                  <label className="text-purple text-xs font-medium">
+                    Post Code
+                  </label>
                   <input
                     type="text"
                     className="w-[90%] mt-2 p-1 rounded border-2 border-gray focus:outline-none"
                     name="postCode"
                     value={formData.clientAddress.postCode}
                     onChange={(e) => handleAddressChange(e, "client")}
+                    placeholder=""
+                    title="Enter your client's post code"
                   />
                 </div>
                 <div>
-                  <p className="text-purple text-xs font-medium">Country</p>
+                  <label className="text-purple text-xs font-medium">
+                    Country
+                  </label>
                   <input
                     type="text"
                     className="w-[90%] mt-2 p-1 rounded border-2 border-gray focus:outline-none"
                     name="country"
                     value={formData.clientAddress.country}
                     onChange={(e) => handleAddressChange(e, "client")}
+                    placeholder=""
+                    title="Enter your client's country"
                   />
                 </div>
               </div>
@@ -147,40 +179,44 @@ export default function InvoiceForm() {
 
             <div className="mt-6">
               <div className="mt-4 flex">
-                <div>
-                  <p className="text-purple text-xs font-medium">
+                <div className="flex flex-col mt-2">
+                  <label className="text-purple text-xs font-medium">
                     Invoice Date
-                  </p>
+                  </label>
                   <DatePicker
                     selected={startDate}
                     onChange={handleDateChange}
-                    dateFormat="yyyy-MM-dd" // Ensure the date format matches the expected format
+                    dateFormat="yyyy-MM-dd"
                     className="w-[90%] mt-2 p-1 rounded border-2 border-gray focus:outline-none"
                   />
                 </div>
                 <div>
-                  <p className="text-purple text-xs font-medium">
+                  <label className="text-purple text-xs font-medium">
                     Payment Terms
-                  </p>
+                  </label>
                   <input
                     type="text"
                     className="w-[90%] mt-2 p-1 rounded border-2 border-gray focus:outline-none"
                     name="paymentTerms"
                     value={formData.paymentTerms}
                     onChange={handleInputChange}
+                    placeholder=""
+                    title="Enter your payment terms"
                   />
                 </div>
               </div>
               <div className="mt-5">
-                <p className="text-purple text-xs font-medium">
+                <label className="text-purple text-xs font-medium">
                   Project Description
-                </p>
+                </label>
                 <input
                   type="text"
                   className="w-[90%] mt-2 p-1 rounded border-2 border-gray focus:outline-none"
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
+                  placeholder=""
+                  title="Enter your project description"
                 />
               </div>
             </div>
@@ -189,18 +225,24 @@ export default function InvoiceForm() {
               <h2 className="text-purple text-sm font-bold">Item List</h2>
               {formData.items.map((item, index) => (
                 <div key={index} className="mt-4 flex gap-2">
-                  <div>
-                    <p className="text-purple text-xs font-medium">Item Name</p>
+                  <div className="flex flex-col mt-2">
+                    <label className="text-purple text-xs font-medium">
+                      Item Name
+                    </label>
                     <input
                       type="text"
                       className="w-52 mt-2 p-1 rounded border-2 border-gray focus:outline-none"
                       onChange={(e) =>
                         handleItemChange(index, "name", e.target.value)
                       }
+                      placeholder=""
+                      title="Enter your item name"
                     />
                   </div>
                   <div className="w-11 mr-2">
-                    <p className="text-purple text-xs font-medium">Qty.</p>
+                    <label className="text-purple text-xs font-medium">
+                      Qty.
+                    </label>
                     <input
                       type="text"
                       className="w-full mt-2 p-1 rounded border-2 border-gray focus:outline-none"
@@ -211,10 +253,14 @@ export default function InvoiceForm() {
                           parseFloat(e.target.value)
                         )
                       }
+                      placeholder=""
+                      title="Enter your item quantity"
                     />
                   </div>
                   <div className="w-20">
-                    <p className="text-purple text-xs font-medium">Price</p>
+                    <label className="text-purple text-xs font-medium">
+                      Price
+                    </label>
                     <input
                       type="text"
                       className="w-full mt-2 p-1 rounded border-2 border-gray focus:outline-none"
@@ -225,9 +271,11 @@ export default function InvoiceForm() {
                           parseFloat(e.target.value)
                         )
                       }
+                      placeholder=""
+                      title="Enter your item price"
                     />
                   </div>
-                  <div>
+                  <div className="mt-2">
                     <p className="text-purple text-xs font-medium">Total</p>
                     <p className="text-strongPurple font-bold mt-3">
                       {item.total}
@@ -237,6 +285,7 @@ export default function InvoiceForm() {
                     className="mt-3 ml-5"
                     type="button"
                     onClick={() => removeItem(index)}
+                    title="Delete item"
                   >
                     <Image src={deleteItem} alt="delete" />
                   </button>

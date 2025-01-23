@@ -1,8 +1,21 @@
 "use client";
 
-import { createContext, useState, useContext, useEffect } from "react";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  ReactNode,
+} from "react";
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  doc,
+  setDoc,
+} from "firebase/firestore";
 import { db } from "@/helpers/firebase";
+import { useRouter } from "next/navigation";
 
 type AppContextType = {
   invoiceDetails: InvoiceArray[] | undefined;
@@ -25,7 +38,8 @@ type AppContextType = {
   handleSubmit: (e: React.FormEvent) => void;
   startDate: Date;
   setStartDate: React.Dispatch<React.SetStateAction<Date>>;
-  handleDateChange: (date: Date) => void;
+  handleDateChange: (date: Date | null) => void;
+  handleDelete: (id: string) => void;
 };
 
 export interface Address {
@@ -89,7 +103,7 @@ const calculatePaymentDue = (
   return formatDate(createdDate);
 };
 
-export const AppProvider = ({ children }: any) => {
+export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [invoiceDetails, setInvoiceDetails] = useState<InvoiceArray[]>();
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
@@ -108,16 +122,30 @@ export const AppProvider = ({ children }: any) => {
   });
   const [startDate, setStartDate] = useState(new Date());
   const [refresh, setRefresh] = useState(false);
+  const router = useRouter();
 
-  const handleDateChange = (date: Date) => {
-    const formattedDate = formatDate(date);
+  const handleDateChange = (date: Date | null) => {
+    if (date) {
+      const formattedDate = formatDate(date);
+      setStartDate(date);
+      setFormData((prev) => ({
+        ...prev,
+        createdAt: formattedDate,
+        paymentDue: calculatePaymentDue(formattedDate, prev.paymentTerms),
+      }));
+    }
+  };
 
-    setStartDate(date);
-    setFormData((prev) => ({
-      ...prev,
-      createdAt: formattedDate,
-      paymentDue: calculatePaymentDue(formattedDate, prev.paymentTerms),
-    }));
+  const handleDelete = async (id: string) => {
+    console.log(`Deleting invoice with id: ${id}`);
+    try {
+      await deleteDoc(doc(db, "invoices", id));
+      console.log("Invoice deleted successfully");
+      refreshInvoices();
+      router.push("/");
+    } catch (error) {
+      console.error("Error deleting invoice: ", error);
+    }
   };
 
   const handleInputChange = (
@@ -214,13 +242,14 @@ export const AppProvider = ({ children }: any) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await addDoc(collection(db, "invoices"), formData);
-      console.log("invoice saved successfully");
+      const invoiceId = formData.id;
+      await setDoc(doc(db, "invoices", invoiceId), formData);
+      console.log("Invoice saved successfully");
       console.log(formData);
       setFormData({
         id: generateRandomId(),
-        createdAt: "",
-        paymentDue: "",
+        createdAt: formatDate(new Date()),
+        paymentDue: calculatePaymentDue(formatDate(new Date()), 0),
         description: "",
         paymentTerms: 0,
         clientName: "",
@@ -275,6 +304,7 @@ export const AppProvider = ({ children }: any) => {
         startDate,
         setStartDate,
         handleDateChange,
+        handleDelete,
       }}
     >
       {children}

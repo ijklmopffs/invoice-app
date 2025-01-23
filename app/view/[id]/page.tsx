@@ -14,13 +14,13 @@ import {
 } from "@/helpers/helper";
 
 export default function ViewInvoice() {
-  const { getViewById, invoiceDetails } = useProvider();
+  const { getViewById, invoiceDetails, handleDelete } = useProvider();
 
   console.log(invoiceDetails);
 
   const params = useParams();
   const router = useRouter();
-  const id = params.id;
+  const id = Array.isArray(params.id) ? params.id[0] : params.id;
 
   const invoice = getViewById(id);
   console.log(invoice);
@@ -90,7 +90,10 @@ export default function ViewInvoice() {
             <button className="bg-[#f9fafe] text-lighterPurple font-bold rounded-full px-11 py-8 text-sm">
               Edit
             </button>
-            <button className="bg-errorRed text-white font-bold rounded-full px-9 py-6 text-sm">
+            <button
+              onClick={() => handleDelete(invoice!.id)}
+              className="bg-errorRed text-white font-bold rounded-full px-9 py-6 text-sm"
+            >
               Delete
             </button>
             <button className="bg-purple text-white font-bold rounded-full px-9 py-6 text-sm">
