@@ -22,6 +22,7 @@ type AppContextType = {
   getViewById: (id: string) => InvoiceArray | undefined;
   handleShowForm: () => void;
   showForm: boolean;
+  setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
   formData: InvoiceArray;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   addItem: () => void;
@@ -36,10 +37,12 @@ type AppContextType = {
     value: string | number
   ) => void;
   handleSubmit: (e: React.FormEvent) => void;
+  handleSaveAsDraft: (e: React.FormEvent) => void;
   startDate: Date;
   setStartDate: React.Dispatch<React.SetStateAction<Date>>;
   handleDateChange: (date: Date | null) => void;
   handleDelete: (id: string) => void;
+  handleDiscard: () => void;
 };
 
 export interface Address {
@@ -267,6 +270,53 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const handleDiscard = () => {
+    setFormData({
+      id: generateRandomId(),
+      createdAt: formatDate(new Date()),
+      paymentDue: calculatePaymentDue(formatDate(new Date()), 0),
+      description: "",
+      paymentTerms: 0,
+      clientName: "",
+      clientEmail: "",
+      status: "pending",
+      senderAddress: { street: "", city: "", postCode: "", country: "" },
+      clientAddress: { street: "", city: "", postCode: "", country: "" },
+      items: [{ name: "", quantity: 0, price: 0, total: 0 }],
+      total: 0,
+    });
+    setShowForm(false);
+  };
+
+  const handleSaveAsDraft = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const draftFormData = { ...formData, status: "draft" };
+      const invoiceId = draftFormData.id; // Use the generated ID
+      await setDoc(doc(db, "invoices", invoiceId), draftFormData);
+      console.log("Invoice saved as draft successfully");
+      console.log(draftFormData);
+      setFormData({
+        id: generateRandomId(),
+        createdAt: formatDate(new Date()),
+        paymentDue: calculatePaymentDue(formatDate(new Date()), 0),
+        description: "",
+        paymentTerms: 0,
+        clientName: "",
+        clientEmail: "",
+        status: "pending",
+        senderAddress: { street: "", city: "", postCode: "", country: "" },
+        clientAddress: { street: "", city: "", postCode: "", country: "" },
+        items: [{ name: "", quantity: 0, price: 0, total: 0 }],
+        total: 0,
+      });
+      setShowForm(false);
+      refreshInvoices();
+    } catch (error) {
+      console.error("Error saving invoice as draft: ", error);
+    }
+  };
+
   const getViewById = (id: string): InvoiceArray | undefined => {
     return invoiceDetails?.find((invoice) => invoice.id === id);
   };
@@ -293,6 +343,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         invoiceDetails,
         getViewById,
         showForm,
+        setShowForm,
         handleShowForm,
         formData,
         handleInputChange,
@@ -305,6 +356,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         setStartDate,
         handleDateChange,
         handleDelete,
+        handleDiscard,
+        handleSaveAsDraft,
       }}
     >
       {children}
