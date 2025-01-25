@@ -1,49 +1,58 @@
 import { useProvider } from "@/context/provider";
-import deleteItem from "@/images/icon-delete.svg";
-import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
+import deleteItem from "@/images/icon-delete.svg";
 import "react-datepicker/dist/react-datepicker.css";
+import Image from "next/image";
 
-export default function InvoiceForm() {
+export default function EditInvoiceForm() {
   const {
-    handleAddressChange,
+    getViewById,
     handleInputChange,
-    formData,
+    handleAddressChange,
     handleItemChange,
     addItem,
     removeItem,
     handleSubmit,
-    startDate,
-    handleDateChange,
-    setShowForm,
-    handleDiscard,
-    handleSaveAsDraft,
+    setFormData,
+    formData,
+    setShowEditForm,
+    formatDate,
+    calculatePaymentDue,
   } = useProvider();
+  const params = useParams();
+  const id = Array.isArray(params.id) ? params.id[0] : params.id;
 
-  const formRef = useRef<HTMLDivElement>(null);
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (formRef.current && !formRef.current.contains(event.target as Node)) {
-      setShowForm(false);
-    }
-  };
+  const [startDate, setStartDate] = useState(new Date());
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+    const invoice = getViewById(id);
+    if (invoice) {
+      setFormData(invoice);
+      setStartDate(new Date(invoice.createdAt));
+    }
+  }, [id, getViewById, setFormData]);
+
+  const handleDateChange = (date: Date | null) => {
+    if (date) {
+      const formattedDate = formatDate(date);
+      setStartDate(date);
+      setFormData((prev) => ({
+        ...prev,
+        createdAt: formattedDate,
+        paymentDue: calculatePaymentDue(formattedDate, prev.paymentTerms),
+      }));
+    }
+  };
 
   return (
     <main>
       <div className="fixed inset-0 bg-black bg-opacity-70 w-full h-screen">
-        <div
-          ref={formRef}
-          className="bg-white overflow-y-scroll overflow-x-hidden w-[40rem] h-screen pt-4 p-10 absolute left-24 top-0 rounded-tr-3xl rounded-br-3xl"
-        >
-          <h1 className="font-bold text-2xl text-darkBeige">New invoice</h1>
+        <div className="bg-white w-[40rem] h-screen pt-4 p-10 absolute left-24 top-0 rounded-tr-3xl rounded-br-3xl z-10">
+          <h1 className="font-bold text-2xl text-darkBeige">
+            Edit #{formData.id}
+          </h1>
           <form onSubmit={handleSubmit}>
             <div className="mt-3">
               <h2 className="text-purple text-sm font-bold">Bill From</h2>
@@ -61,7 +70,6 @@ export default function InvoiceForm() {
                   title="Enter your street address"
                 />
               </div>
-
               <div className="mt-4 flex justify-between">
                 <div>
                   <label className="text-purple text-xs font-medium">
@@ -254,6 +262,7 @@ export default function InvoiceForm() {
                     <input
                       type="text"
                       className="w-52 mt-2 p-1 rounded border-2 border-gray focus:outline-none"
+                      value={item.name}
                       onChange={(e) =>
                         handleItemChange(index, "name", e.target.value)
                       }
@@ -268,6 +277,7 @@ export default function InvoiceForm() {
                     <input
                       type="text"
                       className="w-full mt-2 p-1 rounded border-2 border-gray focus:outline-none"
+                      value={item.quantity}
                       onChange={(e) =>
                         handleItemChange(
                           index,
@@ -286,6 +296,7 @@ export default function InvoiceForm() {
                     <input
                       type="text"
                       className="w-full mt-2 p-1 rounded border-2 border-gray focus:outline-none"
+                      value={item.price}
                       onChange={(e) =>
                         handleItemChange(
                           index,
@@ -321,24 +332,21 @@ export default function InvoiceForm() {
                 +Add new item
               </button>
             </div>
-            <div className="mt-5 flex justify-between items-center">
+
+            <div className="mt-4 flex justify-end space-x-4">
               <button
-                onClick={handleDiscard}
-                className="bg-[#f9fafe] text-lighterPurple font-bold text-sm rounded-full px-8 py-3"
+                type="button"
+                className="bg-gray-200 text-gray-700 font-bold rounded-full px-4 py-2"
+                onClick={() => setShowEditForm(false)}
               >
-                Discard
+                Cancel
               </button>
-              <div className="space-x-3">
-                <button
-                  onClick={handleSaveAsDraft}
-                  className="bg-[#373B53] text-strongPurple font-bold text-sm rounded-full px-7 py-4"
-                >
-                  Save as Draft
-                </button>
-                <button className="bg-purple text-white font-bold text-sm rounded-full px-7 py-4">
-                  Save & Send
-                </button>
-              </div>
+              <button
+                type="submit"
+                className="bg-purple text-white font-bold rounded-full px-4 py-2"
+              >
+                Save Changes
+              </button>
             </div>
           </form>
         </div>

@@ -13,6 +13,7 @@ import {
   deleteDoc,
   doc,
   setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "@/helpers/firebase";
 import { useRouter } from "next/navigation";
@@ -21,8 +22,11 @@ type AppContextType = {
   invoiceDetails: InvoiceArray[] | undefined;
   getViewById: (id: string) => InvoiceArray | undefined;
   handleShowForm: () => void;
+  handleShowEditForm: () => void;
   showForm: boolean;
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
+  showEditForm: boolean;
+  setShowEditForm: React.Dispatch<React.SetStateAction<boolean>>;
   formData: InvoiceArray;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   addItem: () => void;
@@ -43,6 +47,10 @@ type AppContextType = {
   handleDateChange: (date: Date | null) => void;
   handleDelete: (id: string) => void;
   handleDiscard: () => void;
+  handleMarkAsPaid: (id: string) => void;
+  setFormData: React.Dispatch<React.SetStateAction<InvoiceArray>>;
+  formatDate: (date: Date) => string;
+  calculatePaymentDue: (createdAt: string, paymentTerms: number) => string;
 };
 
 export interface Address {
@@ -109,6 +117,7 @@ const calculatePaymentDue = (
 export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [invoiceDetails, setInvoiceDetails] = useState<InvoiceArray[]>();
   const [showForm, setShowForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
   const [formData, setFormData] = useState({
     id: generateRandomId(),
     createdAt: formatDate(new Date()),
@@ -127,6 +136,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   const [refresh, setRefresh] = useState(false);
   const router = useRouter();
 
+  const refreshInvoices = () => {
+    setRefresh((prev) => !prev);
+  };
+
   const handleDateChange = (date: Date | null) => {
     if (date) {
       const formattedDate = formatDate(date);
@@ -140,14 +153,24 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const handleDelete = async (id: string) => {
-    console.log(`Deleting invoice with id: ${id}`);
     try {
       await deleteDoc(doc(db, "invoices", id));
-      console.log("Invoice deleted successfully");
       refreshInvoices();
       router.push("/");
     } catch (error) {
       console.error("Error deleting invoice: ", error);
+    }
+  };
+
+  const handleMarkAsPaid = async (id: string) => {
+    try {
+      await updateDoc(doc(db, "invoices", id), {
+        status: "paid",
+      });
+      router.push("/");
+      refreshInvoices();
+    } catch (error) {
+      console.error("Error marking invoice as paid: ", error);
     }
   };
 
@@ -238,17 +261,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     }));
   };
 
-  const refreshInvoices = () => {
-    setRefresh((prev) => !prev);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const invoiceId = formData.id;
       await setDoc(doc(db, "invoices", invoiceId), formData);
-      console.log("Invoice saved successfully");
-      console.log(formData);
       setFormData({
         id: generateRandomId(),
         createdAt: formatDate(new Date()),
@@ -292,10 +309,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     e.preventDefault();
     try {
       const draftFormData = { ...formData, status: "draft" };
-      const invoiceId = draftFormData.id; // Use the generated ID
+      const invoiceId = draftFormData.id;
       await setDoc(doc(db, "invoices", invoiceId), draftFormData);
-      console.log("Invoice saved as draft successfully");
-      console.log(draftFormData);
       setFormData({
         id: generateRandomId(),
         createdAt: formatDate(new Date()),
@@ -334,7 +349,25 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   }, [refresh]);
 
   const handleShowForm = () => {
+    setFormData({
+      id: generateRandomId(),
+      createdAt: formatDate(new Date()),
+      paymentDue: calculatePaymentDue(formatDate(new Date()), 0),
+      description: "",
+      paymentTerms: 0,
+      clientName: "",
+      clientEmail: "",
+      status: "pending",
+      senderAddress: { street: "", city: "", postCode: "", country: "" },
+      clientAddress: { street: "", city: "", postCode: "", country: "" },
+      items: [{ name: "", quantity: 0, price: 0, total: 0 }],
+      total: 0,
+    });
     setShowForm(true);
+  };
+
+  const handleShowEditForm = () => {
+    setShowEditForm(true);
   };
 
   return (
@@ -345,6 +378,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         showForm,
         setShowForm,
         handleShowForm,
+        showEditForm,
+        setShowEditForm,
+        handleShowEditForm,
         formData,
         handleInputChange,
         addItem,
@@ -358,6 +394,10 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         handleDelete,
         handleDiscard,
         handleSaveAsDraft,
+        handleMarkAsPaid,
+        setFormData,
+        formatDate,
+        calculatePaymentDue,
       }}
     >
       {children}

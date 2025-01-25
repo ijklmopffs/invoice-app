@@ -15,9 +15,6 @@ interface InvoiceArray {
   clientName: string;
   clientEmail: string;
   status: string;
-  // senderAddress: Address;
-  // clientAddress: Address;
-  // items: Item[];
   total: number;
   arrowRight: string;
 }
@@ -44,36 +41,80 @@ export default function InvoiceComponent({
   }
 
   return (
-    <div className="flex justify-between items-center bg-white rounded-md my-4 p-10">
-      <div>
-        <span className="text-lightPurple font-bold">#</span>
-        <p className="text-darkBeige font-bold inline-block">{id}</p>
-      </div>
+    <>
+      <Link href={`/view/${id}`} className="hidden md:block">
+        <div className="hover:border-purple hover:border-2 cursor-pointer flex justify-between items-center bg-white rounded-md my-4 p-7">
+          <div>
+            <span className="text-lightPurple font-bold">#</span>
+            <p className="text-darkBeige font-bold inline-block">{id}</p>
+          </div>
 
-      <div className="flex items-center gap-1">
-        <span className="text-lighterPurple font-medium text-sm">Due</span>
-        <p className="text-strongPurple font-medium text-sm">
-          {formatDate(paymentDue)}
-        </p>
-      </div>
-      <h1 className="text-strongPurple font-medium text-sm">{clientName}</h1>
-      <p className="font-bold text-sm">£ {formatMoney(total)}</p>
-      <div
-        className={`px-6 py-2 rounded flex items-center gap-2 font-bold text-sm ${
-          getStatusStyles(status).textColor
-        } ${getStatusStyles(status).bgColor}`}
-      >
-        <div
-          className={`w-2 h-2 rounded ${getStatusStyles(status).textColor} ${
-            getStatusStyles(status).bgColor
-          }`}
-        ></div>
-        <p>{capitalizeFirstLetter(status)}</p>
-      </div>
+          <div className="flex items-center gap-1">
+            <span className="text-lighterPurple font-medium text-sm">Due</span>
+            <p className="text-strongPurple font-medium text-sm">
+              {formatDate(paymentDue)}
+            </p>
+          </div>
+          <h1 className="text-strongPurple font-medium text-sm">
+            {clientName}
+          </h1>
+          <p className="font-bold text-sm">£ {formatMoney(total)}</p>
+          <div
+            className={`px-6 py-2 rounded flex items-center gap-2 font-bold text-sm ${
+              getStatusStyles(status).textColor
+            } ${getStatusStyles(status).bgColor}`}
+          >
+            <div
+              className={`w-2 h-2 rounded ${
+                getStatusStyles(status).textColor
+              } ${getStatusStyles(status).bgColor}`}
+            ></div>
+            <p>{capitalizeFirstLetter(status)}</p>
+          </div>
 
-      <Link href={`/view/${id}`}>
-        <Image src={arrowRight} alt="icon" />
+          <Image src={arrowRight} alt="icon" />
+        </div>
       </Link>
-    </div>
+
+      <div className="px-4 md:hidden">
+        <Link href={`/view/${id}`} className="md:hidden">
+          <div className="hover:border-purple space-y-3 hover:border-2 cursor-pointer flex justify-between items-center bg-white rounded-md my-4 p-7">
+            <div>
+              <div>
+                <span className="text-lightPurple font-bold">#</span>
+                <p className="text-darkBeige font-bold inline-block">{id}</p>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <span className="text-lighterPurple font-medium text-sm">
+                  Due
+                </span>
+                <p className="text-strongPurple font-medium text-sm">
+                  {formatDate(paymentDue)}
+                </p>
+              </div>
+              <p className="font-bold text-sm">£ {formatMoney(total)}</p>
+            </div>
+            <div className="space-y-3">
+              <h1 className="text-strongPurple font-medium text-sm">
+                {clientName}
+              </h1>
+              <div
+                className={`px-6 py-2 rounded flex items-center gap-2 font-bold text-sm ${
+                  getStatusStyles(status).textColor
+                } ${getStatusStyles(status).bgColor}`}
+              >
+                <div
+                  className={`w-2 h-2 rounded ${
+                    getStatusStyles(status).textColor
+                  } ${getStatusStyles(status).bgColor}`}
+                ></div>
+                <p>{capitalizeFirstLetter(status)}</p>
+              </div>
+            </div>
+          </div>
+        </Link>
+      </div>
+    </>
   );
 }

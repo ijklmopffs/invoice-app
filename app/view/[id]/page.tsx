@@ -12,9 +12,17 @@ import {
   formatDate,
   formatMoney,
 } from "@/helpers/helper";
+import EditInvoiceForm from "@/components/EditInvoiceForm";
 
 export default function ViewInvoice() {
-  const { getViewById, invoiceDetails, handleDelete } = useProvider();
+  const {
+    getViewById,
+    invoiceDetails,
+    handleDelete,
+    handleMarkAsPaid,
+    showEditForm,
+    handleShowEditForm,
+  } = useProvider();
 
   console.log(invoiceDetails);
 
@@ -45,32 +53,34 @@ export default function ViewInvoice() {
   }
 
   return (
-    <main className="flex gap-[30rem]">
-      <div className="bg-[#373b53] w-24 h-screen rounded-tr-3xl rounded-br-3xl flex flex-col justify-between pb-8">
+    <main className="flex flex-col md:flex-row gap-4 md:gap-[30rem]">
+      <div className="bg-[#373b53] md:w-24 md:h-screen md:rounded-tr-3xl md:rounded-br-3xl flex flex-row md:flex-col justify-between md:pb-8">
         <div className="bg-gradient-to-b from-purple to-lightPurple w-24 h-24 flex items-center justify-center rounded-tr-3xl rounded-br-3xl">
           <Image src={logo} alt="" className="mx-auto" />
         </div>
 
-        <div className="flex flex-col items-center justify-center gap-8">
+        <div className="flex md:flex-col items-center justify-center gap-4 md:gap-8">
           <Image src={moonIcon} alt="" />
           <div className="bg-[#494e6e] w-full h-[1px]" />
           <Image src={avatar} alt="" className="rounded-full w-10 h-10" />
         </div>
       </div>
 
-      <div className="w-[65rem] my-8">
+      <div className="md:w-[65rem] my-8 pt-4 p-8 md:pt-0 md:p-0 mt-0 mb-10 md:mb-0">
         <div>
           <button
             className="flex items-center gap-2 bg-transparent"
             onClick={handleBack}
           >
             <Image src={arrowLeft} alt="" />
-            <p className="text-darkBeige font-bold text-sm">Go back</p>
+            <p className="hover:text-purple text-darkBeige font-bold text-sm">
+              Go back
+            </p>
           </button>
         </div>
 
         <div className="flex items-center justify-between bg-white rounded-md p-9 mt-4">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 justify-between md:justify-normal w-full md:w-auto">
             <p className="text-lightPurple font-medium text-sm">Status</p>
             <div
               className={`px-8 py-3 rounded flex items-center gap-2 font-bold text-sm ${
@@ -86,25 +96,33 @@ export default function ViewInvoice() {
             </div>
           </div>
 
-          <div className="space-x-5">
-            <button className="bg-[#f9fafe] text-lighterPurple font-bold rounded-full px-11 py-8 text-sm">
+          <div className="space-x-5 hidden md:block">
+            <button
+              onClick={handleShowEditForm}
+              className="hover:opacity-80 bg-[#f9fafe] text-lighterPurple font-bold rounded-full px-11 py-8 text-sm"
+            >
               Edit
             </button>
             <button
               onClick={() => handleDelete(invoice!.id)}
-              className="bg-errorRed text-white font-bold rounded-full px-9 py-6 text-sm"
+              className="hover:opacity-80 bg-errorRed text-white font-bold rounded-full px-9 py-6 text-sm"
             >
               Delete
             </button>
-            <button className="bg-purple text-white font-bold rounded-full px-9 py-6 text-sm">
-              Mark as paid
-            </button>
+            {invoice!.status === "pending" && (
+              <button
+                onClick={() => handleMarkAsPaid(invoice!.id)}
+                className="hover:opacity-80 bg-purple text-white font-bold rounded-full px-9 py-6 text-sm"
+              >
+                Mark as paid
+              </button>
+            )}
           </div>
         </div>
 
         <div className="bg-white rounded mt-8 p-12">
-          <div className="flex justify-between">
-            <div className="space-y-4">
+          <div className="flex flex-col md:flex-row md:justify-between">
+            <div className="md:space-y-4">
               <div className="">
                 <span className="text-lightPurple font-bold">#</span>
                 <h3 className="text-darkBeige font-bold inline-block text-lg">
@@ -117,7 +135,7 @@ export default function ViewInvoice() {
               </p>
             </div>
 
-            <div className="text-right font-medium text-lighterPurple">
+            <div className="md:text-right font-medium text-lighterPurple mt-2 md:mt-0">
               <p>{invoice?.senderAddress.street}</p>
               <p>{invoice?.senderAddress.country}</p>
               <p>{invoice?.senderAddress.postCode}</p>
@@ -125,7 +143,7 @@ export default function ViewInvoice() {
             </div>
           </div>
 
-          <div className="mt-8 flex gap-40">
+          <div className="mt-8 flex flex-wrap md:flex-nowrap gap-20 md:gap-40">
             <div className="space-y-6">
               <div className="space-y-3">
                 <h3 className="text-lighterPurple font-medium text-xs">
@@ -170,7 +188,7 @@ export default function ViewInvoice() {
             </div>
           </div>
 
-          <div className="mt-8 bg-[#f9fafe] p-10 flex justify-between rounded-tr-lg rounded-tl-lg">
+          <div className="mt-8 bg-[#f9fafe] p-10 hidden md:flex justify-between rounded-tr-lg rounded-tl-lg">
             <div className="space-y-8">
               <h2 className="text-lighterPurple font-medium text-xs">
                 Item Name
@@ -219,7 +237,46 @@ export default function ViewInvoice() {
               ))}
             </div>
           </div>
-          <div className="bg-[#373b53] rounded-bl-lg rounded-br-lg p-10 flex justify-between text-white">
+          <div className="mt-8 bg-[#f9fafe] p-10 md:hidden rounded-tr-lg rounded-tl-lg flex items-center justify-between">
+            <div>
+              {invoice?.items.map((item, index) => (
+                <h3 key={index} className="text-darkBeige font-bold text-sm">
+                  {item.name}
+                </h3>
+              ))}
+              <div className="flex items-center gap-2">
+                {invoice?.items.map((item, index) => (
+                  <h3
+                    key={index}
+                    className="text-lighterPurple font-bold text-sm"
+                  >
+                    {item.quantity}
+                  </h3>
+                ))}
+                x
+                {invoice?.items.map((item, index) => (
+                  <div key={index} className="text-lighterPurple space-x-1">
+                    <span>£</span>
+                    <h3 className="inline-block font-bold text-sm">
+                      {formatMoney(item.price)}
+                    </h3>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>
+              {invoice?.items.map((item, index) => (
+                <div key={index} className="text-darkBeige space-x-1">
+                  <span>£</span>
+                  <h3 className="inline-block font-bold text-sm">
+                    {formatMoney(item.total)}
+                  </h3>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-[#373b53] rounded-bl-lg rounded-br-lg p-10 flex justify-between text-white items-center">
             <p className="font-medium text-xs">Amount Due</p>
             <div className="space-x-1 font-bold text-2xl">
               <span>£</span>
@@ -227,6 +284,29 @@ export default function ViewInvoice() {
             </div>
           </div>
         </div>
+      </div>
+      {showEditForm && <EditInvoiceForm />}
+      <div className="space-x-5 md:hidden bg-white w-full p-4 fixed bottom-0 left-0 flex justify-between">
+        <button
+          onClick={handleShowEditForm}
+          className="hover:opacity-80 bg-[#f9fafe] text-lighterPurple font-bold rounded-full px-11 py-5 text-sm"
+        >
+          Edit
+        </button>
+        <button
+          onClick={() => handleDelete(invoice!.id)}
+          className="hover:opacity-80 bg-errorRed text-white font-bold rounded-full px-9 py-4 text-sm"
+        >
+          Delete
+        </button>
+        {invoice!.status === "pending" && (
+          <button
+            onClick={() => handleMarkAsPaid(invoice!.id)}
+            className="hover:opacity-80 bg-purple text-white font-bold rounded-full px-9 py-4 text-sm"
+          >
+            Mark as paid
+          </button>
+        )}
       </div>
     </main>
   );
