@@ -42,7 +42,7 @@ export default function InvoiceComponent({
 
   return (
     <>
-      <Link href={`/view/${id}`} className="hidden md:block">
+      <Link href={`/view/${id}`} className="hidden md:block px-4 lg:px-0">
         <div className="hover:border-purple hover:border-2 cursor-pointer flex justify-between items-center bg-white rounded-md my-4 p-7">
           <div>
             <span className="text-lightPurple font-bold">#</span>

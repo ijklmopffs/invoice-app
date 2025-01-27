@@ -7,7 +7,7 @@ export default function Navigation() {
   const { invoiceDetails, handleShowForm } = useProvider();
 
   return (
-    <main className="md:w-[65rem] my-8 flex items-center justify-between p-4 md:p-0">
+    <main className="lg:w-[65rem] my-8 flex items-center justify-between p-4 lg:p-0">
       <div>
         <h1 className="font-bold text-2xl md:text-4xl text-darkBeige">
           Invoices

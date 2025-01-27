@@ -50,7 +50,7 @@ export default function EditInvoiceForm() {
   return (
     <main>
       <div className="fixed inset-0 bg-black bg-opacity-70 w-full h-screen">
-        <div className="bg-white overflow-y-scroll overflow-x-hidden w-full md:w-[40rem] h-screen md:pt-4 p-10 absolute left-0 md:left-24 top-0 md:rounded-tr-3xl md:rounded-br-3xl z-10">
+        <div className="bg-white overflow-y-scroll overflow-x-hidden w-full md:w-[40rem] h-screen md:pt-4 p-10 absolute left-0 lg:left-24 top-0 md:rounded-tr-3xl md:rounded-br-3xl z-10">
           <div className="md:hidden mb-5">
             <button
               className="flex items-center gap-8 bg-transparent"

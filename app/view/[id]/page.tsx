@@ -53,20 +53,20 @@ export default function ViewInvoice() {
   }
 
   return (
-    <main className="flex flex-col md:flex-row gap-4 md:gap-[30rem]">
-      <div className="bg-[#373b53] md:w-24 md:h-screen md:rounded-tr-3xl md:rounded-br-3xl flex flex-row md:flex-col justify-between md:pb-8">
+    <main className="flex flex-col lg:flex-row gap-4 lg:gap-[30rem]">
+      <div className="bg-[#373b53] lg:w-24 lg:h-screen lg:rounded-tr-3xl lg:rounded-br-3xl flex flex-row lg:flex-col justify-between lg:pb-8">
         <div className="bg-gradient-to-b from-purple to-lightPurple w-24 h-24 flex items-center justify-center rounded-tr-3xl rounded-br-3xl">
           <Image src={logo} alt="" className="mx-auto" />
         </div>
 
-        <div className="flex md:flex-col items-center justify-center gap-4 md:gap-8">
+        <div className="flex lg:flex-col items-center justify-center gap-4 md:gap-8">
           <Image src={moonIcon} alt="" />
           <div className="bg-[#494e6e] w-full h-[1px]" />
           <Image src={avatar} alt="" className="rounded-full w-10 h-10" />
         </div>
       </div>
 
-      <div className="md:w-[65rem] md:mt-8 my-8 pt-4 p-8 md:pt-0 md:p-0 mt-0 mb-10 md:mb-0">
+      <div className="md:w-[65rem] md:mt-8 my-8 pt-4 p-8 md:mx-auto lg:mx-0 md:pt-0 lg:p-0 mt-0 mb-10 md:mb-0">
         <div>
           <button
             className="flex items-center gap-2 bg-transparent"
