@@ -66,7 +66,7 @@ export default function ViewInvoice() {
         </div>
       </div>
 
-      <div className="md:w-[65rem] my-8 pt-4 p-8 md:pt-0 md:p-0 mt-0 mb-10 md:mb-0">
+      <div className="md:w-[65rem] md:mt-8 my-8 pt-4 p-8 md:pt-0 md:p-0 mt-0 mb-10 md:mb-0">
         <div>
           <button
             className="flex items-center gap-2 bg-transparent"
@@ -286,28 +286,30 @@ export default function ViewInvoice() {
         </div>
       </div>
       {showEditForm && <EditInvoiceForm />}
-      <div className="space-x-5 md:hidden bg-white w-full p-4 fixed bottom-0 left-0 flex justify-between">
-        <button
-          onClick={handleShowEditForm}
-          className="hover:opacity-80 bg-[#f9fafe] text-lighterPurple font-bold rounded-full px-11 py-5 text-sm"
-        >
-          Edit
-        </button>
-        <button
-          onClick={() => handleDelete(invoice!.id)}
-          className="hover:opacity-80 bg-errorRed text-white font-bold rounded-full px-9 py-4 text-sm"
-        >
-          Delete
-        </button>
-        {invoice!.status === "pending" && (
+      {showEditForm === false && (
+        <div className="space-x-5 md:hidden bg-white w-full p-4 fixed bottom-0 left-0 flex justify-between">
           <button
-            onClick={() => handleMarkAsPaid(invoice!.id)}
-            className="hover:opacity-80 bg-purple text-white font-bold rounded-full px-9 py-4 text-sm"
+            onClick={handleShowEditForm}
+            className="hover:opacity-80 bg-[#f9fafe] text-lighterPurple font-bold rounded-full px-11 py-5 text-sm"
           >
-            Mark as paid
+            Edit
           </button>
-        )}
-      </div>
+          <button
+            onClick={() => handleDelete(invoice!.id)}
+            className="hover:opacity-80 bg-errorRed text-white font-bold rounded-full px-9 py-4 text-sm"
+          >
+            Delete
+          </button>
+          {invoice!.status === "pending" && (
+            <button
+              onClick={() => handleMarkAsPaid(invoice!.id)}
+              className="hover:opacity-80 bg-purple text-white font-bold rounded-full px-9 py-4 text-sm"
+            >
+              Mark as paid
+            </button>
+          )}
+        </div>
+      )}
     </main>
   );
 }

@@ -5,6 +5,7 @@ import DatePicker from "react-datepicker";
 import deleteItem from "@/images/icon-delete.svg";
 import "react-datepicker/dist/react-datepicker.css";
 import Image from "next/image";
+import arrowLeft from "@/images/icon-arrow-left.svg";
 
 export default function EditInvoiceForm() {
   const {
@@ -49,7 +50,19 @@ export default function EditInvoiceForm() {
   return (
     <main>
       <div className="fixed inset-0 bg-black bg-opacity-70 w-full h-screen">
-        <div className="bg-white w-[40rem] h-screen pt-4 p-10 absolute left-24 top-0 rounded-tr-3xl rounded-br-3xl z-10">
+        <div className="bg-white overflow-y-scroll overflow-x-hidden w-full md:w-[40rem] h-screen md:pt-4 p-10 absolute left-0 md:left-24 top-0 md:rounded-tr-3xl md:rounded-br-3xl z-10">
+          <div className="md:hidden mb-5">
+            <button
+              className="flex items-center gap-8 bg-transparent"
+              onClick={() => setShowEditForm(false)}
+            >
+              <Image src={arrowLeft} alt="" />
+              <p className="hover:text-purple text-darkBeige font-bold text-sm">
+                Go back
+              </p>
+            </button>
+          </div>
+
           <h1 className="font-bold text-2xl text-darkBeige">
             Edit #{formData.id}
           </h1>
@@ -70,7 +83,7 @@ export default function EditInvoiceForm() {
                   title="Enter your street address"
                 />
               </div>
-              <div className="mt-4 flex justify-between">
+              <div className="mt-4 flex md:justify-between flex-wrap md:flex-nowrap">
                 <div>
                   <label className="text-purple text-xs font-medium">
                     City
@@ -99,7 +112,7 @@ export default function EditInvoiceForm() {
                     title="Enter your post code"
                   />
                 </div>
-                <div>
+                <div className="w-full flex flex-col mt-4 md:w-auto md:block">
                   <label className="text-purple text-xs font-medium">
                     Country
                   </label>
@@ -161,7 +174,7 @@ export default function EditInvoiceForm() {
                 />
               </div>
 
-              <div className="mt-4 flex justify-between">
+              <div className="mt-4 flex md:justify-between flex-wrap md:flex-nowrap">
                 <div>
                   <label className="text-purple text-xs font-medium">
                     City
@@ -190,7 +203,7 @@ export default function EditInvoiceForm() {
                     title="Enter your client's post code"
                   />
                 </div>
-                <div>
+                <div className="w-full flex flex-col mt-4 md:w-auto md:block">
                   <label className="text-purple text-xs font-medium">
                     Country
                   </label>
@@ -208,7 +221,7 @@ export default function EditInvoiceForm() {
             </div>
 
             <div className="mt-4">
-              <div className="mt-4 flex">
+              <div className="mt-4 md:flex">
                 <div className="flex flex-col mt-2">
                   <label className="text-purple text-xs font-medium">
                     Invoice Date
@@ -254,14 +267,17 @@ export default function EditInvoiceForm() {
             <div className="mt-4">
               <h2 className="text-purple text-sm font-bold">Item List</h2>
               {formData.items.map((item, index) => (
-                <div key={index} className="mt-1 flex gap-2">
+                <div
+                  key={index}
+                  className="mt-1 flex gap-2 flex-wrap md:flex-nowrap"
+                >
                   <div className="flex flex-col mt-2">
                     <label className="text-purple text-xs font-medium">
                       Item Name
                     </label>
                     <input
                       type="text"
-                      className="w-52 mt-2 p-1 rounded border-2 border-gray focus:outline-none"
+                      className="w-96 md:w-52 mt-2 p-1 rounded border-2 border-gray focus:outline-none"
                       value={item.name}
                       onChange={(e) =>
                         handleItemChange(index, "name", e.target.value)
@@ -310,12 +326,12 @@ export default function EditInvoiceForm() {
                   </div>
                   <div className="mt-2">
                     <p className="text-purple text-xs font-medium">Total</p>
-                    <p className="text-strongPurple font-bold mt-3">
+                    <p className="text-strongPurple font-bold mt-3 text-center">
                       {item.total}
                     </p>
                   </div>
                   <button
-                    className="mt-3 ml-5"
+                    className="mt-5 md:mt-3 ml-5"
                     type="button"
                     onClick={() => removeItem(index)}
                     title="Delete item"
