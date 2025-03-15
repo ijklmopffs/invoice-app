@@ -30,7 +30,7 @@ export default function Home() {
   ));
 
   return (
-    <main className="flex flex-col lg:flex-row gap-4 lg:gap-[30rem]">
+    <main className="flex flex-col lg:flex-row gap-4 lg:gap-[20rem]">
       <div className="bg-[#373b53] lg:w-24 lg:h-screen lg:rounded-tr-3xl lg:rounded-br-3xl flex flex-row lg:flex-col justify-between lg:pb-8">
         <div className="bg-gradient-to-b from-purple to-lightPurple w-24 h-24 flex items-center justify-center rounded-tr-3xl rounded-br-3xl">
           <Image src={logo} alt="" className="mx-auto" />
